@@ -300,9 +300,6 @@
         }
         async handleSubmit() {
             var _a, _b;
-            const submitBtn = this.element.querySelector(".feedback-submit");
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Submitting...";
             const titleInput = this.element.querySelector(".feedback-input");
             const titleValue = titleInput.value.trim();
             const textarea = this.element.querySelector(".feedback-textarea");
@@ -311,6 +308,9 @@
                 this.showError("title");
                 return;
             }
+            const submitBtn = this.element.querySelector(".feedback-submit");
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting...";
             const deviceInfo = this.getDeviceInfo();
             const pageInfo = window.location.href;
             const feedback = {
