@@ -447,8 +447,10 @@
         constructor(config) {
             this.modal = null;
             const scriptTag = document.currentScript;
+            console.log("scriptTag:", scriptTag);
             const urlParams = new URLSearchParams((scriptTag === null || scriptTag === void 0 ? void 0 : scriptTag.src.split("?")[1]) || "");
             const fidFromScript = urlParams.get("fid");
+            console.log("fidFromScript", fidFromScript);
             this.config = {
                 projectId: fidFromScript || config.projectId,
             };
@@ -481,6 +483,11 @@
     // 确保导出到全局
     if (typeof window !== "undefined") {
         window.FeedbackKing = FeedbackKing;
+        const scriptTag = document.currentScript;
+        if (scriptTag) {
+            // 自动创建实例
+            new FeedbackKing({});
+        }
     }
 
     return FeedbackKing;
