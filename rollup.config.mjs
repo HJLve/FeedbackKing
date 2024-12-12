@@ -28,7 +28,7 @@ export default {
     isDev && serve({
       open: true,
       contentBase: ['dist', 'demo'],
-      port: 3000,
+      port: 2000,
       headers: {
         'Access-Control-Allow-Origin': '*',
       }

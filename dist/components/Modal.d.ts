@@ -1,6 +1,7 @@
 import { FeedbackConfig } from "../config";
 export declare class FeedbackModal {
     private element;
+    private successElement;
     private config;
     private selectedType;
     constructor(config: FeedbackConfig);

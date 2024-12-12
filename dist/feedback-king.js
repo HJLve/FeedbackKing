@@ -200,6 +200,13 @@
             this.injectStyles();
             this.element = this.createModal();
             this.bindEvents();
+            this.successElement = createElement("div", {
+                className: "feedback-success",
+                innerHTML: `
+        <div class="feedback-checkmark">✓</div>
+        <h3>Thanks for your feedback!</h3>
+      `,
+            });
         }
         getModalHTML() {
             return `
@@ -299,7 +306,7 @@
             }
         }
         async handleSubmit() {
-            var _a, _b;
+            var _a;
             const titleInput = this.element.querySelector(".feedback-input");
             const titleValue = titleInput.value.trim();
             const textarea = this.element.querySelector(".feedback-textarea");
@@ -324,25 +331,34 @@
                 timestamp: Date.now(),
             };
             try {
-                await ((_b = (_a = this.config).onSubmit) === null || _b === void 0 ? void 0 : _b.call(_a, feedback));
+                // 这里可以添加您的默认提交逻辑
+                const response = await fetch("您的API端点", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        projectId: this.config.projectId,
+                        ...feedback,
+                    }),
+                });
+                if (!response.ok) {
+                    throw new Error("提交失败");
+                }
                 const modalContent = this.element.querySelector(".feedback-modal-content");
                 if (modalContent) {
-                    modalContent.innerHTML = `
-        <div class="feedback-success">
-          <div class="feedback-checkmark">✓</div>
-          <h3>Thanks for your feedback!</h3>
-        </div>
-      `;
+                    // 使用 DOM 缓存和显示/隐藏切换，而不是重建
+                    (_a = modalContent.firstElementChild) === null || _a === void 0 ? void 0 : _a.classList.add("hide");
+                    modalContent.appendChild(this.successElement);
+                    setTimeout(() => {
+                        var _a;
+                        this.hide();
+                        (_a = modalContent.firstElementChild) === null || _a === void 0 ? void 0 : _a.classList.remove("hide");
+                        this.successElement.remove();
+                        titleInput.value = "";
+                        textarea.value = "";
+                    }, 2000);
                 }
-                setTimeout(() => {
-                    this.hide();
-                    if (modalContent) {
-                        modalContent.innerHTML = this.getModalHTML();
-                        this.bindEvents();
-                    }
-                    titleInput.value = "";
-                    textarea.value = "";
-                }, 2000);
             }
             catch (error) {
                 console.error("Failed to submit feedback:", error);
@@ -430,7 +446,12 @@
     class FeedbackKing {
         constructor(config) {
             this.modal = null;
-            this.config = { ...config };
+            const scriptTag = document.currentScript;
+            const urlParams = new URLSearchParams((scriptTag === null || scriptTag === void 0 ? void 0 : scriptTag.src.split("?")[1]) || "");
+            const fidFromScript = urlParams.get("fid");
+            this.config = {
+                projectId: fidFromScript || config.projectId,
+            };
             this.validateConfig();
             this.init();
         }
