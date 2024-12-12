@@ -101,7 +101,7 @@
     }
 
     .feedback-input {
-        width: 294px;
+        width: 100%;
         padding: 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 8px;
@@ -117,7 +117,7 @@
     }
 
     .feedback-textarea {
-        width: 294px;
+        width: 100%;
         padding: 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 8px;
